@@ -13,3 +13,23 @@
 7. Запустите Ngrok htpp на порту 9000. Сделайте его скриншот и добавьте в README.md
 
 Ответ:
+
+
+ <details>
+ <summary>
+ 6. Сделайте скриншот файлов которые нашли внутри контейнера и добавьте в README.md
+ </summary>
+  
+ <img width="800" alt="Снимок экрана 2023-10-23 в 19 33 31" src="https://github.com/catstyle1101/uc-flow-node/assets/37059480/f017911d-9e05-4112-8293-4849a7447063">
+ </details>
+ 
+
+<details>
+<summary>
+7. Запустите Ngrok htpp на порту 9000. Сделайте его скриншот и добавьте в README.md
+</summary>
+ 
+ <img width="800" alt="Снимок экрана 2023-10-23 в 19 47 41" src="https://github.com/catstyle1101/uc-flow-node/assets/37059480/1336eadd-a4e6-43bd-8996-ee33b9b6a459">
+ </details>
+
+
