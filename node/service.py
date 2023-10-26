@@ -55,14 +55,19 @@ class InfoView(info.Info):
 class ExecuteView(execute.Execute):
     async def post(self, json: NodeRunContext) -> NodeRunContext:
         try:
-            text_field_value = int(
-                json.node.data.properties.get('text_field', "0"))
-            numeric_field_value = json.node.data.properties.get(
-                'numeric_field', 0)
-            is_switched = json.node.data.properties.get('switch', False)
-            total_value = text_field_value + numeric_field_value
-            total_value = total_value if is_switched else str(total_value)
-            await json.save_result({"result": total_value})
+            data: dict = json.node.data.properties
+
+            text_field_value: str = data.get('text_field', "0")
+            numeric_field_value: int | float = data.get('numeric_field', 0)
+            send_as_num: bool = data.get('switch', False)
+
+            sum_float: float = (float(text_field_value) + numeric_field_value)
+            result_num: float | int = (
+                sum_float if sum_float.is_integer() else int(sum_float)
+            )
+            result: str | int = (result_num if send_as_num else str(result_num))
+
+            await json.save_result({"result": result})
             json.state = RunState.complete
         except Exception as e:
             self.log.warning(f'Error {e}')
