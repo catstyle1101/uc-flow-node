@@ -61,11 +61,8 @@ class ExecuteView(execute.Execute):
             numeric_field_value: int | float = data.get('numeric_field', 0)
             send_as_num: bool = data.get('switch', False)
 
-            sum_float: float = (float(text_field_value) + numeric_field_value)
-            result_num: float | int = (
-                sum_float if sum_float.is_integer() else int(sum_float)
-            )
-            result: str | int = (result_num if send_as_num else str(result_num))
+            result_sum = int(text_field_value) + numeric_field_value
+            result: str | int = (result_sum if send_as_num else str(result_sum))
 
             await json.save_result({"result": result})
             json.state = RunState.complete
