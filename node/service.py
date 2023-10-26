@@ -1,4 +1,4 @@
-import ujson
+import json
 from typing import List, Tuple
 
 from uc_flow_nodes.schemas import NodeRunContext
@@ -10,22 +10,40 @@ from uc_http_requester.requester import Request
 
 
 class NodeType(flow.NodeType):
-    id: str = '65718f4d-b6df-4227-ba1f-e0c144c7bc6c'
+    id: str = '60096456-c5cf-4541-a26d-82158e02e39a'
     type: flow.NodeType.Type = flow.NodeType.Type.action
-    name: str = 'MyNode'
-    displayName: str = 'MyNode'
-    icon: str = '<svg><text x="8" y="50" font-size="50">🤖</text></svg>'
-    description: str = 'Ngrok node'
+    name: str = 'Calculator'
+    displayName: str = 'MyFirstNode'
+    icon: str = '<svg><text x="8" y="50" font-size="50">😜</text></svg>'
+    description: str = 'sum of two fields: text and numeric'
     properties: List[Property] = [
         Property(
-            displayName='Тестовое поле',
-            name='foo_field',
+            displayName='Текстовое поле',
+            name='text_field',
             type=Property.Type.JSON,
-            placeholder='Foo placeholder',
-            description='Foo description',
+            placeholder='Text field placeholder',
+            description='Текстовое поле',
             required=True,
-            default='Test data',
-        )
+            default='0',
+        ),
+        Property(
+            displayName='Числовое поле',
+            name='numeric_field',
+            type=Property.Type.NUMBER,
+            placeholder='Numeric field placeholder',
+            description='Числовое поле',
+            required=True,
+            default=0,
+        ),
+        Property(
+            displayName='Отправить как число?',
+            name='switch',
+            type=Property.Type.BOOLEAN,
+            placeholder='Switch placeholder',
+            description='Send response in numeric/text format',
+            required=True,
+            default=False,
+        ),
     ]
 
 
@@ -37,9 +55,14 @@ class InfoView(info.Info):
 class ExecuteView(execute.Execute):
     async def post(self, json: NodeRunContext) -> NodeRunContext:
         try:
-            await json.save_result({
-                "result": json.node.data.properties['foo_field']
-            })
+            text_field_value = int(
+                json.node.data.properties.get('text_field', "0"))
+            numeric_field_value = json.node.data.properties.get(
+                'numeric_field', 0)
+            is_switched = json.node.data.properties.get('switch', False)
+            total_value = text_field_value + numeric_field_value
+            total_value = total_value if is_switched else str(total_value)
+            await json.save_result({"result": total_value})
             json.state = RunState.complete
         except Exception as e:
             self.log.warning(f'Error {e}')
