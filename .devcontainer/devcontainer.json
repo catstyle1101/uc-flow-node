@@ -12,11 +12,12 @@
   "portsAttributes": {
     "9000": {
       "label": "uc-flow-node",
-      "onAutoForward": "notify"
+      "onAutoForward": "notify",
+      "requireLocalPort": true
     }
   },
   "remoteUser": "root",
   "runArgs": [
-    "--network=host"
+    "-p=9000:9000"
   ]
 }
