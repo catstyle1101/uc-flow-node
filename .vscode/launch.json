@@ -11,9 +11,9 @@
       },
       "console": "integratedTerminal",
       "args": [
-        "node.service",
+        "nodes.switcher.action.node.component",
         "-c",
-        "node/config.yaml"
+        "nodes/switcher/action/node/config.yaml"
       ]
     }
   ]
