@@ -7,8 +7,7 @@ from uc_flow_schemas.flow import (
     NodeType as BaseNodeType, DisplayOptions, OptionValue,
 )
 from nodes.switcher.action.node.static.icon import ICON
-from nodes.switcher.action.node.schemas.enums import DropdownWithTwoValues
-
+from nodes.switcher.action.node.schemas.enums import FirstDropdown, Parameters, SecondDropdown, Switch
 
 
 class NodeType(flow.NodeType):
@@ -22,7 +21,7 @@ class NodeType(flow.NodeType):
     properties: List[Property] = [
         Property(
             displayName='switch',
-            name='switch',
+            name=Parameters.switch_field,
             type=Property.Type.BOOLEAN,
             placeholder='switch placeholder',
             description='Switch, which enables fields',
@@ -31,74 +30,74 @@ class NodeType(flow.NodeType):
         ),
         Property(
             displayName='Поле №1',
-            name='first_field',
+            name=Parameters.first_field,
             type=Property.Type.OPTIONS,
             description='Введите значение для поля №1',
             required=True,
             noDataExpression=True,
             displayOptions=DisplayOptions(
                 show={
-                    'switch': [True],
+                    'switch': [Switch.enable],
                 },
             ),
             options=[
                 OptionValue(
-                    name=DropdownWithTwoValues.first_value.value,
-                    value=DropdownWithTwoValues.first_value,
+                    name=FirstDropdown.first_value.value,
+                    value=FirstDropdown.first_value,
                 ),
                 OptionValue(
-                    name=DropdownWithTwoValues.second_value.value,
-                    value=DropdownWithTwoValues.second_value,
+                    name=FirstDropdown.second_value.value,
+                    value=FirstDropdown.second_value,
                 ),
             ],
         ),
         Property(
             displayName='Поле №2',
-            name='second_field',
+            name=Parameters.second_field,
             type=Property.Type.OPTIONS,
             required=True,
             noDataExpression=True,
             description='Введите значение для поля №2',
             displayOptions=DisplayOptions(
                 show={
-                    'switch': [True],
+                    'switch': [Switch.enable],
                 },
             ),
             options=[
                 OptionValue(
-                    name=DropdownWithTwoValues.first_value.value,
-                    value=DropdownWithTwoValues.first_value,
+                    name=SecondDropdown.first_value.value,
+                    value=SecondDropdown.first_value,
                 ),
                 OptionValue(
-                    name=DropdownWithTwoValues.second_value.value,
-                    value=DropdownWithTwoValues.second_value,
+                    name=SecondDropdown.second_value.value,
+                    value=SecondDropdown.second_value,
                 ),
             ],
         ),
         Property(
             displayName='Электронная почта',
-            name='email',
+            name=Parameters.email_field,
             type=Property.Type.EMAIL,
             placeholder='mymail@google.com',
             description='Введите электронную почту',
             displayOptions=DisplayOptions(
                 show={
-                    'switch': [True],
-                    'first_field': [DropdownWithTwoValues.first_value],
-                    'second_field': [DropdownWithTwoValues.first_value],
+                    'switch': [Switch.enable],
+                    'first_field': [FirstDropdown.first_value],
+                    'second_field': [SecondDropdown.first_value],
                 },
             ),
         ),
         Property(
             displayName='Поле даты/времени',
-            name='datetime',
+            name=Parameters.datetime_field,
             type=Property.Type.DATETIME,
             description='Введите необходимую дату и время',
             displayOptions=DisplayOptions(
                 show={
-                    'switch': [True],
-                    'first_field': [DropdownWithTwoValues.second_value],
-                    'second_field': [DropdownWithTwoValues.second_value],
+                    'switch': [Switch.enable],
+                    'first_field': [FirstDropdown.second_value],
+                    'second_field': [SecondDropdown.second_value],
                 },
             ),
         ),
