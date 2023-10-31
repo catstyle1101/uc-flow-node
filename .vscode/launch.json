@@ -11,9 +11,9 @@
       },
       "console": "integratedTerminal",
       "args": [
-        "nodes.switcher.action.node.component",
+        "nodes.alfacrm.action.node.component",
         "-c",
-        "nodes/switcher/action/node/config.yaml"
+        "nodes/alfacrm/action/node/config.yaml"
       ]
     }
   ]

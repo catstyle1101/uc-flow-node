@@ -1,4 +1,4 @@
-service_name: 'example'
+service_name: '60096456-c5cf-4541-a26d-82158e02e39a'
 
 http:
   url: http://0.0.0.0:9000

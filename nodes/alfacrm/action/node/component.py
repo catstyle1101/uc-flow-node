@@ -1,6 +1,6 @@
 from uc_flow_nodes.service import NodeService
 
-from nodes.switcher.action.node.views import info, execute
+from nodes.alfacrm.action.node.views import info, execute
 
 
 class Service(NodeService):
