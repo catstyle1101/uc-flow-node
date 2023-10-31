@@ -7,11 +7,11 @@ from uc_flow_schemas.flow import (
     NodeType as BaseNodeType, DisplayOptions, OptionValue,
 )
 from nodes.alfacrm.action.node.static.icon import ICON
-from nodes.alfacrm.action.node.schemas.enums import ActionEnum
+from nodes.alfacrm.action.node.schemas.enums import ActionEnum, RequestEnum, RequestTypeEnum, Parameters
 
 
 class NodeType(flow.NodeType):
-    id: str = '60096456-c5cf-4541-a26d-82158e02e39a'
+    id: str = '202390d8-d663-4f5b-89e4-ba1c13d5c173'
     type: BaseNodeType.Type = BaseNodeType.Type.action
     displayName: str = 'AlfaCRM module'
     icon: str = ICON
@@ -20,8 +20,8 @@ class NodeType(flow.NodeType):
     defaults: Defaults = Defaults(name='alfacrm-action', color='#00FF00')
     properties: List[Property] = [
         Property(
-            displayName='Resource',
-            name='resource',
+            displayName='Action',
+            name='action',
             type=Property.Type.OPTIONS,
             noDataExpression=True,
             description='Выберите действие кубика',
@@ -32,13 +32,202 @@ class NodeType(flow.NodeType):
                     description='Авторизация пользователя',
                 ),
                 OptionValue(
-                    name='Customer',
-                    value=ActionEnum.customer,
+                    name='Request',
+                    value=ActionEnum.request,
                     description='Customer request',
                 ),
             ],
         ),
-    ]
-    credentials: List[flow.NodeType.Credential] = [
-        flow.NodeType.Credential(name='alfacrm_api_auth', required=True)
+        Property(
+            displayName='Hostname',
+            name='hostname',
+            type=Property.Type.STRING,
+            description='Введите адрес вашей CRM',
+            noDataExpression=True,
+            placeholder='https://example.com',
+            default='https://uiscom.s20.online',
+            displayOptions=DisplayOptions(
+                show={
+                    'action': [
+                        ActionEnum.authorization,
+                    ],
+                },
+            ),
+        ),
+        Property(
+            displayName='Branch ID',
+            name='branch_id',
+            type=Property.Type.NUMBER,
+            description='Введите ID филиала',
+            default=1,
+            noDataExpression=True,
+            displayOptions=DisplayOptions(
+                show={
+                    'action': [
+                        ActionEnum.authorization,
+                    ],
+                },
+            ),
+        ),
+        Property(
+            displayName='E-mail',
+            name='email',
+            type=Property.Type.EMAIL,
+            description='Введите email для авторизации',
+            noDataExpression=True,
+            placeholder='mail@mail.ru',
+            displayOptions=DisplayOptions(
+                show={
+                    'action': [
+                        ActionEnum.authorization,
+                    ],
+                },
+            ),
+        ),
+        Property(
+            displayName='API key (v2api)',
+            name='api_key',
+            type=Property.Type.STRING,
+            description='Введите ваш API ключ (v2api)',
+            noDataExpression=True,
+            displayOptions=DisplayOptions(
+                show={
+                    'action': [
+                        ActionEnum.authorization,
+                    ],
+                },
+            ),
+        ),
+        Property(
+            displayName='Resource',
+            name='resource',
+            type=Property.Type.OPTIONS,
+            description='Выберите модель для работы',
+            noDataExpression=True,
+            displayOptions=DisplayOptions(
+                show={
+                    'action': [
+                        ActionEnum.request,
+                    ],
+                },
+            ),
+            options=[
+                OptionValue(
+                    name='Customer',
+                    value=RequestEnum.customer,
+                    description='Пользователь',
+                ),
+
+            ],
+        ),
+        Property(
+            displayName='Operation',
+            name='operation',
+            type=Property.Type.OPTIONS,
+            description='Выберите операцию для работы',
+            noDataExpression=True,
+            displayOptions=DisplayOptions(
+                show={
+                    'action': [
+                        ActionEnum.request,
+                    ],
+                    'resource': [
+                        RequestEnum.customer,
+                    ],
+                },
+            ),
+            options=[
+                OptionValue(
+                    name='Index',
+                    value=RequestTypeEnum.index,
+                    description='Получение сущностей',
+                ),
+                OptionValue(
+                    name='Create',
+                    value=RequestTypeEnum.create,
+                    description='Создание сущностей',
+                ),
+                OptionValue(
+                    name='Update',
+                    value=RequestTypeEnum.update,
+                    description='Изменение сущностей',
+                ),
+            ],
+        ),
+        Property(
+            displayName='Parameters',
+            name='parameters',
+            type=Property.Type.COLLECTION,
+            placeholder='Add',
+            default={},
+            displayOptions=DisplayOptions(
+                show={
+                    'action': [
+                        ActionEnum.request,
+                    ],
+                    'resource': [
+                        RequestEnum.customer,
+                    ],
+                    'operation': [
+                        RequestTypeEnum.index,
+                    ],
+                },
+            ),
+            options=[
+                Property(
+                    displayName='ID клиента',
+                    name=Parameters.id,
+                    description='id клиента',
+                    values=[
+                        Property(
+                            type=Property.Type.NUMBER,
+                            default=1,
+                        ),
+                    ],
+                ),
+                Property(
+                    displayName='is_study',
+                    name=Parameters.is_study,
+                    description='состояние клиента ( 0 - лид, 1 - клиент)',
+                    values=[
+                        Property(
+                            type=Property.Type.BOOLEAN,
+                            default=True,
+                        ),
+                    ],
+                ),
+                Property(
+                    displayName='name',
+                    name=Parameters.name,
+                    description='полное имя',
+                    values=[
+                        Property(
+                            type=Property.Type.STRING,
+                            default='234а 34а234 3а 4а',
+                        ),
+                    ],
+                ),
+                Property(
+                    displayName='date_from',
+                    name=Parameters.date_from,
+                    description='дата добавления от, date',
+                    values=[
+                        Property(
+                            type=Property.Type.DATETIME,
+                        ),
+                    ],
+                ),
+                Property(
+                    displayName='balance_contract_from',
+                    name=Parameters.balance_contract_from,
+                    description='баланс договора от',
+                    values=[
+                        Property(
+                            type=Property.Type.NUMBER,
+                            default=0.0,
+                        ),
+                    ],
+                ),
+            ],
+        ),
     ]

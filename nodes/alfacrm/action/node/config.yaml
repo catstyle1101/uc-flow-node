@@ -1,4 +1,4 @@
-service_name: '60096456-c5cf-4541-a26d-82158e02e39a'
+service_name: '202390d8-d663-4f5b-89e4-ba1c13d5c173'
 
 http:
   url: http://0.0.0.0:9000
@@ -20,4 +20,4 @@ uc_flow_node:
   public_url: https://mullet-intent-muskrat.ngrok-free.app
   uc_flow:
     domain: https://uc-flow-v2-pp-api.comagic.ru
-    jwt_secret: qwerlkjflksdjflskdfjsldkfjsdliu
+    jwt_secret: 9d147e67-109d-49a2-a3f9-ecfb31710988
