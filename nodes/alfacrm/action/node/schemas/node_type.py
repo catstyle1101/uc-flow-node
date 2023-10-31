@@ -99,6 +99,18 @@ class NodeType(flow.NodeType):
             ),
         ),
         Property(
+            displayName='Auth data',
+            name='auth_data',
+            type=Property.Type.STRING,
+            displayOptions=DisplayOptions(
+                show={
+                    'action': [
+                        ActionEnum.request,
+                    ],
+                },
+            ),
+        ),
+        Property(
             displayName='Resource',
             name='resource',
             type=Property.Type.OPTIONS,
@@ -182,6 +194,7 @@ class NodeType(flow.NodeType):
                         Property(
                             type=Property.Type.NUMBER,
                             default=1,
+                            name=Parameters.id,
                         ),
                     ],
                 ),
@@ -191,8 +204,9 @@ class NodeType(flow.NodeType):
                     description='состояние клиента ( 0 - лид, 1 - клиент)',
                     values=[
                         Property(
-                            type=Property.Type.BOOLEAN,
-                            default=True,
+                            type=Property.Type.NUMBER,
+                            default=1,
+                            name=Parameters.is_study,
                         ),
                     ],
                 ),
@@ -204,6 +218,7 @@ class NodeType(flow.NodeType):
                         Property(
                             type=Property.Type.STRING,
                             default='234а 34а234 3а 4а',
+                            name=Parameters.name,
                         ),
                     ],
                 ),
@@ -214,6 +229,7 @@ class NodeType(flow.NodeType):
                     values=[
                         Property(
                             type=Property.Type.DATETIME,
+                            name=Parameters.date_from,
                         ),
                     ],
                 ),
@@ -225,6 +241,7 @@ class NodeType(flow.NodeType):
                         Property(
                             type=Property.Type.NUMBER,
                             default=0.0,
+                            name=Parameters.balance_contract_from,
                         ),
                     ],
                 ),

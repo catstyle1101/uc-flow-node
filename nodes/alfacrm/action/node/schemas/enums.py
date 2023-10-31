@@ -1,6 +1,12 @@
 from enum import Enum
 
+AUTH_HEADER = 'X-ALFACRM-TOKEN'
 URL_API_GENERAL = 'v2api/'
+
+
+class Api(str, Enum):
+    login = 'auth/login'
+    customer = 'customer/index'
 
 
 class ActionEnum(str, Enum):
