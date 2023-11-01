@@ -8,7 +8,7 @@ class ClientIdItem(BaseModel):
 
 
 class IsStudy(BaseModel):
-    is_study: int
+    is_study: bool
 
 
 class Name(BaseModel):
@@ -37,3 +37,11 @@ class Email(BaseModel):
 
 class ApiKey(BaseModel):
     api_key: str
+
+
+class BranchIds(BaseModel):
+    branch_ids: int
+
+
+class LegalType(BaseModel):
+    legal_type: bool

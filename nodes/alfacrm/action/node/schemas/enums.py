@@ -6,7 +6,9 @@ URL_API_GENERAL = 'v2api/'
 
 class Api(str, Enum):
     login = 'auth/login'
-    customer = 'customer/index'
+    get_customer = 'customer/index'
+    create_customer = 'customer/create'
+    update_customer = 'customer/update'
 
 
 class ActionEnum(str, Enum):
@@ -19,7 +21,7 @@ class RequestEnum(str, Enum):
 
 
 class RequestTypeEnum(str, Enum):
-    index = 'index'
+    index_ = 'index'
     create = 'create'
     update = 'update'
 
@@ -61,3 +63,4 @@ class Parameters(str, Enum):
     comment = 'comment'
     dob_from = 'dob_from'
     dob_to = 'dob_to'
+    branch_ids = 'branch_ids'

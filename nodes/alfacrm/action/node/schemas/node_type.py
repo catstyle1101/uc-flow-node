@@ -151,7 +151,7 @@ class NodeType(flow.NodeType):
             options=[
                 OptionValue(
                     name='Index',
-                    value=RequestTypeEnum.index,
+                    value=RequestTypeEnum.index_,
                     description='Получение сущностей',
                 ),
                 OptionValue(
@@ -172,6 +172,7 @@ class NodeType(flow.NodeType):
             type=Property.Type.COLLECTION,
             placeholder='Add',
             default={},
+            noDataExpression=True,
             displayOptions=DisplayOptions(
                 show={
                     'action': [
@@ -181,7 +182,7 @@ class NodeType(flow.NodeType):
                         RequestEnum.customer,
                     ],
                     'operation': [
-                        RequestTypeEnum.index,
+                        RequestTypeEnum.index_,
                     ],
                 },
             ),
@@ -204,8 +205,8 @@ class NodeType(flow.NodeType):
                     description='состояние клиента ( 0 - лид, 1 - клиент)',
                     values=[
                         Property(
-                            type=Property.Type.NUMBER,
-                            default=1,
+                            type=Property.Type.BOOLEAN,
+                            default=True,
                             name=Parameters.is_study,
                         ),
                     ],
@@ -242,6 +243,123 @@ class NodeType(flow.NodeType):
                             type=Property.Type.NUMBER,
                             default=0.0,
                             name=Parameters.balance_contract_from,
+                        ),
+                    ],
+                ),
+            ],
+        ),
+        Property(
+            displayName='Parameters',
+            name='parameters',
+            type=Property.Type.COLLECTION,
+            placeholder='Add',
+            default={},
+            noDataExpression=True,
+            displayOptions=DisplayOptions(
+                show={
+                    'action': [
+                        ActionEnum.request,
+                    ],
+                    'resource': [
+                        RequestEnum.customer,
+                    ],
+                    'operation': [
+                        RequestTypeEnum.create,
+                    ],
+                },
+            ),
+            options=[
+                Property(
+                    displayName='is_study',
+                    name=Parameters.is_study,
+                    description='состояние клиента ( 0 - лид, 1 - клиент)',
+                    values=[
+                        Property(
+                            type=Property.Type.BOOLEAN,
+                            default=True,
+                            name=Parameters.is_study,
+                        ),
+                    ],
+                ),
+                Property(
+                    displayName='name',
+                    name=Parameters.name,
+                    description='полное имя',
+                    values=[
+                        Property(
+                            type=Property.Type.STRING,
+                            default='Ivan Ivanov',
+                            name=Parameters.name,
+                        ),
+                    ],
+                ),
+                Property(
+                    displayName='branch_ids',
+                    name=Parameters.branch_ids,
+                    description='массив идентификаторов филиалов (Branch)',
+                    values=[
+                        Property(
+                            type=Property.Type.NUMBER,
+                            name=Parameters.branch_ids,
+                        ),
+                    ],
+                ),
+                Property(
+                    displayName='legal_type',
+                    name=Parameters.legal_type,
+                    description='тип клиента (1 - физ. лицо, 2 - юр. лицо)',
+                    values=[
+                        Property(
+                            type=Property.Type.BOOLEAN,
+                            default=True,
+                            name=Parameters.legal_type,
+                        ),
+                    ],
+                ),
+            ],
+        ),
+        Property(
+            displayName='Parameters',
+            name='parameters',
+            type=Property.Type.COLLECTION,
+            placeholder='Add',
+            default={},
+            noDataExpression=True,
+            displayOptions=DisplayOptions(
+                show={
+                    'action': [
+                        ActionEnum.request,
+                    ],
+                    'resource': [
+                        RequestEnum.customer,
+                    ],
+                    'operation': [
+                        RequestTypeEnum.update,
+                    ],
+                },
+            ),
+            options=[
+                Property(
+                    displayName='ID клиента',
+                    name=Parameters.id,
+                    description='id клиента',
+                    values=[
+                        Property(
+                            type=Property.Type.NUMBER,
+                            default=13,
+                            name=Parameters.id,
+                        ),
+                    ],
+                ),
+                Property(
+                    displayName='name',
+                    name=Parameters.name,
+                    description='полное имя',
+                    values=[
+                        Property(
+                            type=Property.Type.STRING,
+                            default='New User Name',
+                            name=Parameters.name,
                         ),
                     ],
                 ),

@@ -7,7 +7,7 @@ from pydantic import BaseModel, AnyHttpUrl, parse_obj_as
 from uc_http_requester.requester import Request
 
 from nodes.alfacrm.action.node.schemas.enums import Parameters, URL_API_GENERAL, AUTH_HEADER, ActionEnum, RequestEnum, RequestTypeEnum, Api
-from nodes.alfacrm.action.node.schemas.models import ApiKey, BalanceContractFrom, BranchId, ClientIdItem, DateFrom, Email, HostName, IsStudy, Name
+from nodes.alfacrm.action.node.schemas.models import ApiKey, BalanceContractFrom, BranchId, BranchIds, ClientIdItem, DateFrom, Email, HostName, IsStudy, LegalType, Name
 
 
 class Config:
@@ -111,7 +111,7 @@ class GetCustomers(Action):
 
     action: Literal[ActionEnum.request]
     resource: Literal[RequestEnum.customer]
-    operation: Literal[RequestTypeEnum.index]
+    operation: Literal[RequestTypeEnum.index_]
     auth_data: dict
     parameters: Optional[Parameters]
 
@@ -120,7 +120,7 @@ class GetCustomers(Action):
         f = self.parameters
         if f:
             params["id"] = self.get_attr(f, Parameters.id)
-            params["is_study"] = self.get_attr(f, Parameters.is_study)
+            params["is_study"] = int(self.get_attr(f, Parameters.is_study))
             params["name"] = self.get_attr(f, Parameters.name)
             params["date_from"] = self.get_attr(f, Parameters.date_from)
             params["balance_contract_from"] = self.get_attr(f, Parameters.balance_contract_from)
@@ -129,7 +129,7 @@ class GetCustomers(Action):
 
     def get_request(self) -> Request:
         auth_data = self.auth_data
-        url = self.get_request_url(auth_data['hostname'], Api.customer, branch_id=auth_data['branch_id'])
+        url = self.get_request_url(auth_data['hostname'], Api.get_customer, branch_id=auth_data['branch_id'])
         headers = self.get_headers()
         return Request(
             url=url,
@@ -141,4 +141,73 @@ class GetCustomers(Action):
 
 
 class CreateCustomer(Action):
-    pass
+    class Parameters(BaseParameters):
+        id: Optional[List[ClientIdItem]]
+        is_study: Optional[List[IsStudy]]
+        name: Optional[List[Name]]
+        branch_ids: Optional[List[BranchIds]]
+        legal_type: Optional[List[LegalType]]
+
+    action: Literal[ActionEnum.request]
+    resource: Literal[RequestEnum.customer]
+    operation: Literal[RequestTypeEnum.create]
+    auth_data: dict
+    parameters: Optional[Parameters]
+
+    def get_request_params(self) -> dict:
+        params = dict()
+        f = self.parameters
+        if f:
+            params["is_study"] = int(self.get_attr(f, Parameters.is_study))
+            params["name"] = self.get_attr(f, Parameters.name)
+            params["branch_ids"] = self.get_attr(f, Parameters.branch_ids)
+            params["legal_type"] = int(self.get_attr(f, Parameters.legal_type))
+        params = self.params_delete_none_object(params)
+        return params
+
+    def get_request(self) -> Request:
+        auth_data = self.auth_data
+        url = self.get_request_url(
+            auth_data['hostname'], Api.create_customer, branch_id=auth_data['branch_id'])
+        headers = self.get_headers()
+        return Request(
+            url=url,
+            method=Request.Method.post,
+            headers=headers,
+            json=self.get_request_params(),
+        )
+
+
+class UpdateCustomer(Action):
+    class Parameters(BaseParameters):
+        id: Optional[List[ClientIdItem]]
+        name: Optional[List[Name]]
+
+    action: Literal[ActionEnum.request]
+    resource: Literal[RequestEnum.customer]
+    operation: Literal[RequestTypeEnum.update]
+    auth_data: dict
+    parameters: Optional[Parameters]
+
+    def get_request_params(self) -> dict:
+        params = dict()
+        f = self.parameters
+        if f:
+            params["id"] = self.get_attr(f, Parameters.id)
+            params["name"] = self.get_attr(f, Parameters.name)
+        params = self.params_delete_none_object(params)
+        return params
+
+    def get_request(self) -> Request:
+        auth_data = self.auth_data
+        url = self.get_request_url(auth_data['hostname'], Api.update_customer, branch_id=auth_data['branch_id'])
+        headers = self.get_headers()
+        params = self.get_request_params()
+        query_params = {'id': params.pop('id')}
+        return Request(
+            url=url,
+            method=Request.Method.post,
+            headers=headers,
+            json=params,
+            params=query_params,
+        )
