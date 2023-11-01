@@ -16,7 +16,8 @@ class ExecuteView(execute.Execute):
             if action.action == ActionEnum.authorization:
                 result['branch_id'] = action.branch_id
                 result['hostname'] = action.hostname
-            result.update(response.json())
+            validated_response = action.validate_response(response)
+            result.update(validated_response)
 
             await json.save_result(result)
             json.state = RunState.complete

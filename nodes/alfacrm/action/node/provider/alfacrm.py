@@ -2,12 +2,27 @@ from json import JSONDecodeError
 from typing import Literal, List, Optional
 from urllib.parse import urljoin
 
-import ujson
 from pydantic import BaseModel, AnyHttpUrl, parse_obj_as
-from uc_http_requester.requester import Request
+from uc_http_requester.requester import Request, Response
 
-from nodes.alfacrm.action.node.schemas.enums import Parameters, URL_API_GENERAL, AUTH_HEADER, ActionEnum, RequestEnum, RequestTypeEnum, Api
-from nodes.alfacrm.action.node.schemas.models import ApiKey, BalanceContractFrom, BranchId, BranchIds, ClientIdItem, DateFrom, Email, HostName, IsStudy, LegalType, Name
+from nodes.alfacrm.action.node.schemas.enums import (
+    ActionEnum,
+    Api,
+    AUTH_HEADER,
+    Parameters,
+    RequestEnum,
+    RequestTypeEnum,
+    URL_API_GENERAL,
+)
+from nodes.alfacrm.action.node.schemas.models import (
+    BalanceContractFrom,
+    BranchIds,
+    ClientIdItem,
+    DateFrom,
+    IsStudy,
+    LegalType,
+    Name,
+)
 
 
 class Config:
@@ -24,12 +39,13 @@ class Action(BaseModel):
     operation: Optional[str]
 
     @staticmethod
-    def validate_response(response: dict) -> [dict, List[dict]]:
+    def validate_response(response: Response) -> [dict, List[dict]]:
         try:
-            if response.get('status_code') != 200:
-                raise Exception(f'{response.get("status_code") =} {response.get("content") = }')
-            if response.get('content'):
-                content = ujson.loads(response.get('content'))
+            if response.status_code != 200:
+                raise Exception(
+                    f"{response.get('status_code') =} {response.get('content') = }")
+            if response.content:
+                content = response.json()
                 if content.get('errors'):
                     raise Exception(f'content errors: {content = }')
             else:
@@ -50,11 +66,12 @@ class Action(BaseModel):
             res.update({key: value}) if value is not None else ...
         return res
 
-    def get_request_url(self, base_url: str, api_endpoint: str, branch_id: str | None = None) -> str:
+    def get_request_url(
+            self, base_url: str, api_endpoint: str, branch_id: str | None = None) -> str:
         api_url: str = URL_API_GENERAL
         url = urljoin(base_url, api_url)
         if branch_id:
-            url = urljoin(url, f"{branch_id}/")
+            url = urljoin(url, f'{branch_id}/')
         url = urljoin(url, api_endpoint)
         return url
 
@@ -119,17 +136,19 @@ class GetCustomers(Action):
         params = dict()
         f = self.parameters
         if f:
-            params["id"] = self.get_attr(f, Parameters.id)
-            params["is_study"] = int(self.get_attr(f, Parameters.is_study))
-            params["name"] = self.get_attr(f, Parameters.name)
-            params["date_from"] = self.get_attr(f, Parameters.date_from)
-            params["balance_contract_from"] = self.get_attr(f, Parameters.balance_contract_from)
+            params['id'] = self.get_attr(f, Parameters.id)
+            is_study = self.get_attr(f, Parameters.is_study)
+            params['is_study'] = None if not is_study else int(is_study)
+            params['name'] = self.get_attr(f, Parameters.name)
+            params['date_from'] = self.get_attr(f, Parameters.date_from)
+            params['balance_contract_from'] = self.get_attr(f, Parameters.balance_contract_from)
         params = self.params_delete_none_object(params)
         return params
 
     def get_request(self) -> Request:
         auth_data = self.auth_data
-        url = self.get_request_url(auth_data['hostname'], Api.get_customer, branch_id=auth_data['branch_id'])
+        url = self.get_request_url(
+            auth_data['hostname'], Api.get_customer, branch_id=auth_data['branch_id'])
         headers = self.get_headers()
         return Request(
             url=url,
@@ -137,7 +156,6 @@ class GetCustomers(Action):
             headers=headers,
             json=self.get_request_params()
         )
-
 
 
 class CreateCustomer(Action):
@@ -158,10 +176,11 @@ class CreateCustomer(Action):
         params = dict()
         f = self.parameters
         if f:
-            params["is_study"] = int(self.get_attr(f, Parameters.is_study))
-            params["name"] = self.get_attr(f, Parameters.name)
-            params["branch_ids"] = self.get_attr(f, Parameters.branch_ids)
-            params["legal_type"] = int(self.get_attr(f, Parameters.legal_type))
+            is_study = self.get_attr(f, Parameters.is_study)
+            params['is_study'] = None if not is_study else int(is_study)
+            params['name'] = self.get_attr(f, Parameters.name)
+            params['branch_ids'] = self.get_attr(f, Parameters.branch_ids)
+            params['legal_type'] = int(self.get_attr(f, Parameters.legal_type))
         params = self.params_delete_none_object(params)
         return params
 
@@ -193,14 +212,15 @@ class UpdateCustomer(Action):
         params = dict()
         f = self.parameters
         if f:
-            params["id"] = self.get_attr(f, Parameters.id)
-            params["name"] = self.get_attr(f, Parameters.name)
+            params['id'] = self.get_attr(f, Parameters.id)
+            params['name'] = self.get_attr(f, Parameters.name)
         params = self.params_delete_none_object(params)
         return params
 
     def get_request(self) -> Request:
         auth_data = self.auth_data
-        url = self.get_request_url(auth_data['hostname'], Api.update_customer, branch_id=auth_data['branch_id'])
+        url = self.get_request_url(
+            auth_data['hostname'], Api.update_customer, branch_id=auth_data['branch_id'])
         headers = self.get_headers()
         params = self.get_request_params()
         query_params = {'id': params.pop('id')}
