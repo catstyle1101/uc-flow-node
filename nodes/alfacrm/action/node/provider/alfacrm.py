@@ -64,8 +64,8 @@ class Action(BaseModel):
         res: dict = {}
         for key, value in params.items():
             res.update({key: value}) if value is not None else ...
-        return res
 
+        return res
     def get_request_url(
             self, base_url: str, api_endpoint: str, branch_id: str | None = None) -> str:
         api_url: str = URL_API_GENERAL
@@ -106,7 +106,6 @@ class Authenticate(Action):
     email: str
     api_key: str
 
-
     def get_request(self) -> Request:
         url = self.get_request_url(self.hostname, Api.login)
         return Request(
@@ -117,6 +116,25 @@ class Authenticate(Action):
                 'api_key': self.api_key,
             }
         )
+
+    def process_content(self, response: dict) -> [dict, List[dict]]:
+        response.update(
+            {
+                'branch_id': self.branch_id,
+                'hostname': self.hostname,
+            }
+        )
+        return response
+
+    def validate_response(self, response: Response) -> [dict, List[dict]]:
+        result = Action.validate_response(response)
+        result.update(
+            {
+                'branch_id': self.branch_id,
+                'hostname': self.hostname,
+            }
+        )
+        return result
 
 class GetCustomers(Action):
     class Parameters(BaseParameters):

@@ -13,11 +13,9 @@ class ExecuteView(execute.Execute):
             action: Action = json.node.data.properties
             request = action.get_request()
             response = await request.execute()
-            if action.action == ActionEnum.authorization:
-                result['branch_id'] = action.branch_id
-                result['hostname'] = action.hostname
             validated_response = action.validate_response(response)
-            result.update(validated_response)
+            content = action.process_content(validated_response)
+            result.update(content)
 
             await json.save_result(result)
             json.state = RunState.complete
